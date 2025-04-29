@@ -12,7 +12,7 @@
         "type": 3,
         "content": {
           "version": "KqlItem/1.0",
-          "query": "{\"version\":\"ARMEndpoint/1.0\",\"headers\":[],\"method\":\"GET\",\"path\":\"/subscriptions/<subscriptionId>/providers/Microsoft.ContainerService/locations/westeurope/kubernetesVersions?api-version=2025-02-01\",\"urlParams\":[],\"transformers\":[{\"type\":\"jsonpath\",\"settings\":{\"tablePath\":\"$.values\",\"columns\":[{\"path\":\"$.version\",\"columnid\":\"version\"},{\"path\":\"$.capabilities.supportPlan\",\"columnid\":\"supportplan\",\"substringRegexMatch\":\".\"}]}}]}",
+          "query": "{\"version\":\"ARMEndpoint/1.0\",\"headers\":[],\"method\":\"GET\",\"path\":\"/subscriptions/{subscriptionId}/providers/Microsoft.ContainerService/locations/westeurope/kubernetesVersions?api-version=2025-02-01\",\"urlParams\":[],\"transformers\":[{\"type\":\"jsonpath\",\"settings\":{\"tablePath\":\"$.values\",\"columns\":[{\"path\":\"$.version\",\"columnid\":\"version\"},{\"path\":\"$.capabilities.supportPlan\",\"columnid\":\"supportplan\",\"substringRegexMatch\":\".\"}]}}]}",
           "size": 0,
           "title": "Select a Kubernetes Version",
           "noDataMessage": "No versions found",

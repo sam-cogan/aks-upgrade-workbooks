@@ -1,0 +1,79 @@
+{
+    "version": "Notebook/1.0",
+    "items": [
+      {
+        "type": 1,
+        "content": {
+          "json": "# AKS Cluster Versions"
+        },
+        "name": "text - 2"
+      },
+      {
+        "type": 3,
+        "content": {
+          "version": "KqlItem/1.0",
+          "query": "resources\r\n| where type =~ 'microsoft.containerservice/managedclusters'\r\n| extend kubernetesVersion = tostring(properties.kubernetesVersion)\r\n| project name, location, kubernetesVersion, subscriptionId, resourceGroup",
+          "size": 0,
+          "exportedParameters": [
+            {
+              "fieldName": "location",
+              "parameterName": "current_location",
+              "parameterType": 1
+            },
+            {
+              "fieldName": "subscriptionId",
+              "parameterName": "sub_id",
+              "parameterType": 1
+            },
+            {
+              "fieldName": "name",
+              "parameterName": "cluster_name",
+              "parameterType": 1
+            },
+            {
+              "fieldName": "resourceGroup",
+              "parameterName": "rg",
+              "parameterType": 1
+            },
+            {
+              "fieldName": "kubernetesVersion",
+              "parameterName": "current_version",
+              "parameterType": 1
+            }
+          ],
+          "queryType": 1,
+          "resourceType": "microsoft.resourcegraph/resources",
+          "crossComponentResources": [
+            "value::all"
+          ]
+        },
+        "name": "query - 0"
+      },
+      {
+        "type": 1,
+        "content": {
+          "json": "# Upgrades Available\r\n\r\nClick on one of the clusters in the table above to see the Kubernetes versions that are available for the cluster to upgrade to."
+        },
+        "name": "text - 3"
+      },
+      {
+        "type": 3,
+        "content": {
+          "version": "KqlItem/1.0",
+          "query": "{\"version\":\"ARMEndpoint/1.0\",\"data\":null,\"headers\":[],\"method\":\"GET\",\"path\":\"/subscriptions/{sub_id}/resourceGroups/{rg}/providers/Microsoft.ContainerService/managedClusters/{cluster_name}/upgradeProfiles/default?api-version=2024-02-01\",\"urlParams\":[],\"batchDisabled\":false,\"transformers\":[{\"type\":\"jsonpath\",\"settings\":{\"tablePath\":\"$..controlPlaneProfile\",\"columns\":[{\"path\":\"$.kubernetesVersion\",\"columnid\":\"currentVersion\"},{\"path\":\"$.upgrades[*].kubernetesVersion\",\"columnid\":\"availableVersions\"}]}}]}",
+          "size": 0,
+          "queryType": 12,
+          "sortBy": []
+        },
+        "conditionalVisibility": {
+          "parameterName": "cluster_name",
+          "comparison": "isNotEqualTo"
+        },
+        "name": "query - 2"
+      }
+    ],
+    "fallbackResourceIds": [
+      "azure monitor"
+    ],
+    "$schema": "https://github.com/Microsoft/Application-Insights-Workbooks/blob/master/schema/workbook.json"
+  }
