@@ -1,0 +1,127 @@
+{
+    "version": "Notebook/1.0",
+    "items": [
+      {
+        "type": 1,
+        "content": {
+          "json": "## Currently Supported Kubernetes Versions\r\nSelect the version of Kubernetes you would like to query against from the list of supported versions below.\r\n\r\n### Support Plan\r\n\r\n- KubernetesOfficial - standard releases, supported for one year\r\n- AKSLongTermSupport - Long Term Support releases, supported for 2 years"
+        },
+        "name": "text - 2"
+      },
+      {
+        "type": 3,
+        "content": {
+          "version": "KqlItem/1.0",
+          "query": "{\"version\":\"ARMEndpoint/1.0\",\"headers\":[],\"method\":\"GET\",\"path\":\"/subscriptions/<subscriptionId>/providers/Microsoft.ContainerService/locations/westeurope/kubernetesVersions?api-version=2025-02-01\",\"urlParams\":[],\"transformers\":[{\"type\":\"jsonpath\",\"settings\":{\"tablePath\":\"$.values\",\"columns\":[{\"path\":\"$.version\",\"columnid\":\"version\"},{\"path\":\"$.capabilities.supportPlan\",\"columnid\":\"supportplan\",\"substringRegexMatch\":\".\"}]}}]}",
+          "size": 0,
+          "title": "Select a Kubernetes Version",
+          "noDataMessage": "No versions found",
+          "noDataMessageStyle": 5,
+          "exportFieldName": "version",
+          "exportParameterName": "k8VersionNum",
+          "queryType": 12,
+          "visualization": "table",
+          "gridSettings": {
+            "formatters": [
+              {
+                "columnMatch": "capabilities",
+                "formatter": 1
+              }
+            ],
+            "sortBy": [
+              {
+                "itemKey": "version",
+                "sortOrder": 2
+              }
+            ],
+            "labelSettings": [
+              {
+                "columnId": "version",
+                "label": "Version"
+              },
+              {
+                "columnId": "supportplan",
+                "label": "Support Plan"
+              }
+            ]
+          },
+          "sortBy": [
+            {
+              "itemKey": "version",
+              "sortOrder": 2
+            }
+          ]
+        },
+        "name": "Get Supported Kubernetes Versions"
+      },
+      {
+        "type": 1,
+        "content": {
+          "json": "## Clusters Running Older Versions\r\nThe following clusters are running Kubernetes versions older than selected in the above list."
+        },
+        "name": "text - 3"
+      },
+      {
+        "type": 3,
+        "content": {
+          "version": "KqlItem/1.0",
+          "query": "resources\r\n| where type =~ 'microsoft.containerservice/managedclusters'\r\n| extend currentVersion = tostring(properties.kubernetesVersion)\r\n| extend orchestratorVersion = \"{k8VersionNum:value}\"\r\n| extend parsedClusterVersion = parse_version(currentVersion), parsedOrchestratorVersion = parse_version(orchestratorVersion)\r\n| where  parsedClusterVersion < parsedOrchestratorVersion \r\n| project id, name, location, currentVersion, orchestratorVersion",
+          "size": 0,
+          "noDataMessage": "All clusters are running Kubernetes versions greater or equal to the selected versions",
+          "noDataMessageStyle": 3,
+          "queryType": 1,
+          "resourceType": "microsoft.resourcegraph/resources",
+          "crossComponentResources": [
+            "value::all"
+          ],
+          "gridSettings": {
+            "formatters": [
+              {
+                "columnMatch": "upgradeUrl",
+                "formatter": 13,
+                "formatOptions": {
+                  "linkColumn": "upgradeUrl",
+                  "linkTarget": "Resource",
+                  "showIcon": true
+                }
+              }
+            ],
+            "labelSettings": [
+              {
+                "columnId": "id",
+                "label": "ID"
+              },
+              {
+                "columnId": "name",
+                "label": "Cluster Name"
+              },
+              {
+                "columnId": "location",
+                "label": "Location"
+              },
+              {
+                "columnId": "currentVersion",
+                "label": "Cluster Version"
+              },
+              {
+                "columnId": "orchestratorVersion",
+                "label": "Selected Version"
+              }
+            ]
+          }
+        },
+        "conditionalVisibility": {
+          "parameterName": "k8VersionNum",
+          "comparison": "isNotEqualTo"
+        },
+        "name": "query - 1"
+      }
+    ],
+    "fallbackResourceIds": [
+      "azure monitor"
+    ],
+    "styleSettings": {
+      "paddingStyle": "narrow"
+    },
+    "$schema": "https://github.com/Microsoft/Application-Insights-Workbooks/blob/master/schema/workbook.json"
+  }
